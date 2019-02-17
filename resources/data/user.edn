@@ -1,0 +1,9 @@
+[{:user/id 1
+  :user/first-name "William"
+  :user/last-name "Ravel"}
+ {:user/id 2
+  :user/first-name "Floriane"
+  :user/last-name "Passos"}
+ {:user/id 3
+  :user/first-name "User 3"
+  :user/last-name "User last name"}]

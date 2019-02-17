@@ -16,7 +16,7 @@
   (d/transact conn [{:user/id 1 :company/name "Apple"}]))
 
 
-(d/pull @conn '[*] [:user/id 1])
+;; (d/pull @conn '[*] [:user/id 1])
 (d/pull-many @conn '[*]
              (d/q '[:find [?group ...]
                     :where
