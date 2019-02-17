@@ -18,9 +18,15 @@
                       [?user field value]]
                     @conn)))
 
+(defn insert [id first-name last-name]
+  (d/transact conn [{:user/id 1
+                     :user/first-name first-name
+                     :user/last-name last-name}]))
+
 (comment
   @conn
   (find-user-list)
   (find-by :user/first-name "William update")
+  (insert 4 "User 4 fn" "User 4 ln")
   )
 

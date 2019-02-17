@@ -4,41 +4,22 @@
             [compojure.route :as route]
             [compojure.core :as compojure]
             [compojure.handler :as handler]
-            ;; [ring.middleware.json :refer [wrap-json-response]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            ))
-
-;; "a"
-;; (use 'ring.adapter.jetty)
-
-;; (use 'ring.middleware.resource
-;;      'ring.middleware.defaults
-;;      'ring.util.response
-;;      'ring.middleware.session.cookie
-;;      'ring.middleware.session
-;;      'ring.middleware.flash
-;;      'ring.middleware.content-type
-;;      'ring.middleware.not-modified
-;;      'ring.middleware.params
-;;      'ring.middleware.keyword-params)
+            [datum.domain.user-html :as user-html]))
 
 (defroutes app-routes
-  (GET "/a"
+  (GET "/"
        []
-       "a22")
-  (GET "/b"
-       []
-       "bb"))
+       "/page/list")
+  (GET "/page/list"
+       [request]
+       (user-html/html request)))
 
 (defonce app
   (-> 
    (routes
-    #'app-routes
-    ;; (wrap-json-response api-route-json)
-    ;; admin-group-route
-    )
+    #'app-routes)
    (wrap-defaults
     (-> site-defaults
         (assoc-in [:security :anti-forgery] false)))))
-
 ;; (run-jetty app {:port 3000})

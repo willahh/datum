@@ -1,12 +1,9 @@
 (ns datum.server
-  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [datahike.api :as d]
-            [datum.domain.user-schema :as user-schema]))
-
-;; (def uri #_"datahike:mem:///test2"
-;;   "datahike:file:///tmp/datum"
-;;   #_"datahike:level:///tmp/api-test2")
+  (:require
+   ;; [compojure.core :refer :all]
+   ;; [compojure.route :as route]
+   [datahike.api :as d]
+   [datum.domain.user-schema :as user-schema]))
 
 (def uri "datahike:file:///tmp/datum")
 
@@ -19,13 +16,12 @@
 
 
 ;; Route
+;; (defroutes app-routes
+;;   (GET "/"
+;;        []
+;;        "test"))
 
-(defroutes app-routes
-  (GET "/"
-       []
-       "test"))
-
-(def handler
-  (->
-   (routes
-    #'app-routes)))
+;; (def handler
+;;   (->
+;;    (routes
+;;     #'app-routes)))
