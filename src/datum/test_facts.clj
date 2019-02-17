@@ -9,12 +9,13 @@
   (d/transact conn (edn/read-string (slurp "resources/data/user.edn")))
   (d/transact conn (edn/read-string (slurp "resources/data/group.edn")))
   (d/transact conn (edn/read-string (slurp "resources/data/company.edn")))
+  (d/transact conn (edn/read-string (slurp "resources/data/profile.edn")))
   (d/transact conn [{:group/id 2 :group/name "Groupe 2 update"}
                     {:user/id 1 :user/group 2}
                     {:user/id 2 :user/group 2}])
   (d/transact conn [{:user/id 1 :user/first-name "William update"}])
   (d/transact conn [{:user/id 1 :company/name "Apple"}]))
-
+;; (insert-data)
 
 ;; (d/pull @conn '[*] [:user/id 1])
 (d/pull-many @conn '[*]
@@ -48,6 +49,8 @@
        [?user :user/first-name ?firstname]]
      @conn)
 
+
+
 (let [group-name "Groupe 2"]
   (d/pull-many @conn '[*]
                (d/q '[:find ?group ?user
@@ -68,11 +71,51 @@
        ]
      @conn)
 
+(d/q '[:find (pull ?group [:group/name])
+       :where
+       [?group :group/id ?groupid] 
+       ]
+     @conn)
+
+(d/q '[:find (pull ?group [*])
+       :where
+       [?group :group/id]]
+     @conn)
+
+(d/q '[:find [pull ?group [:group/name]]
+       :where
+       [?group :group/id]
+       [?user :user/id]
+       ]
+     @conn)
+
+(d/q '[:find (pull ?user [:user/first-name
+                          {:user/group [:db/id :group/name]}])
+       :where
+       [?user :user/id]]
+     @conn)
+
+(d/q '[:find (pull ?user [:user/first-name
+                          {:user/group [:db/id :group/name]}])
+       :where
+       [?user :user/id]
+       [?group :group/id]
+       ]
+     @conn)
+
+(d/q '[:find ?user-first-name
+       :where
+       [?group :group/id]
+       [?user :user/id]
+       [?user :user/first-name ?user-first-name]
+       ]
+     @conn)
+
 (d/pull-many @conn '[:group/name]
              [4 5])
 
-(d/pull-many @conn '[:group/name]
-             #{[5 2] [5 1]})
+;; (d/pull-many @conn '[:group/name]
+;;              #{[5 2] [5 1]})
 
 (d/pull-many @conn '[:group/name]
              #{[5 2] [5 1]})

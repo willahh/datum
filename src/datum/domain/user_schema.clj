@@ -12,4 +12,4 @@
    :user/company {:db/valueType :db.type/ref
                   :db/cardinality :db.cardinality/one }
    :user/group {:db/valueType :db.type/ref
-                :db/cardinality :db.cardinality/one }})
+                :db/cardinality :db.cardinality/many }})

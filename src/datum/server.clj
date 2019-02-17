@@ -18,8 +18,6 @@
 (def conn (d/connect uri))
 
 
-
-
 ;; Route
 
 (defroutes app-routes
