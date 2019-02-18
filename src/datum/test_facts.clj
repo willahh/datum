@@ -18,6 +18,7 @@
                     {:user/id 3 :user/group 1}])
   (d/transact conn [{:user/id 1 :user/first-name "William update"}])
   (d/transact conn [{:user/id 1 :company/name "Apple"}])
+  (d/transact conn [{:user/id 4 :group/id 1}])
 
   ;; Add keyword relations
   (d/transact conn [{:keyword/id 1 :keyword/keyword 2}])
@@ -108,12 +109,32 @@
        ]
      @conn)
 
-(d/q '[:find (pull ?e [*])
+(d/q '[:find (pull ?e [:user/first-name
+                       :user/group
+                       {:group/id [:group/name]}]) 
        :where
        [?e :user/id]
+       [?e :user/first-name ?firstname]
+       [?e :user/group ?groupid]
+       [?group :group/id ?groupid]
        ]
      @conn)
 
+;; !!!!!!!!!!!!!!!!!!! First nested request success !!!!!!
+(def a (d/q '[:find (pull ?e [:group/name
+                              :group/user {:group/id [:user/first-name]}])
+              :where
+              [?e :group/id]]
+            @conn))
+
+;; (clojure.data.json/write-str {:a 1})
+
+(d/q '[:find (pull ?e [:keyword/name
+                       :keyword/keyword
+                       {:keyword/id [:keyword/name]}])
+       :where
+       [?e :keyword/id]]
+     @conn)
 
 (d/q '[:find (pull ?user [*])
        :where
