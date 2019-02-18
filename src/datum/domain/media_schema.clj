@@ -18,4 +18,11 @@
                  :db/index true}
    :media/category {:db/valueType :db.type/ref
                     :db/cardinality :db.cardinality/many}
+
+
+   :media.keyword/id {:db/valueType :db.type/ref
+                      :db/cardinality :db.cardinality/one}
+   :media.keyword/name {:db/valueType :db.type/string
+                        :db/cardinality :db.cardinality/one
+                        :db/index true}
    })
