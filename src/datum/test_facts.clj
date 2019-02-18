@@ -1,6 +1,7 @@
 (ns datum.test-facts
   (:require  [datahike.api :as d]
-             [clojure.edn :as edn]))
+             [clojure.edn :as edn]
+             [clojure.data.json :as json]))
 
 (def uri "datahike:file:///tmp/datum")
 (def conn (d/connect uri))
@@ -19,6 +20,7 @@
   (d/transact conn [{:user/id 1 :user/first-name "William update"}])
   (d/transact conn [{:user/id 1 :company/name "Apple"}])
   (d/transact conn [{:user/id 4 :group/id 1}])
+  (d/transact conn [{:user/id 4 :user/fav true}])
 
   ;; Add keyword relations
   (d/transact conn [{:keyword/id 1 :keyword/keyword 2}])
@@ -40,6 +42,13 @@
              (d/q '[:find [?user ...]
                     :where
                     [?user :user/id]] @conn))
+
+;; Get user fav
+(d/pull-many @conn '[*]
+             (d/q '[:find [?user ...]
+                    :where
+                    [?user :user/id]
+                    [?user :user/fav true]] @conn))
 
 (d/pull-many @conn '[*]
              (d/q '[:find [?media ...]
@@ -121,13 +130,34 @@
      @conn)
 
 ;; !!!!!!!!!!!!!!!!!!! First nested request success !!!!!!
-(def a (d/q '[:find (pull ?e [:group/name
-                              :group/user {:group/id [:user/first-name]}])
-              :where
-              [?e :group/id]]
-            @conn))
+(-> (d/q '[:find (pull ?e [:group/name
+                           :group/user {:group/id [:user/first-name]}])
+           :where
+           [?e :group/id]]
+         @conn)
+    json/write-str
+    json/read-str)
 
-;; (clojure.data.json/write-str {:a 1})
+(defn find-group []
+  (d/q '[:find (pull ?e [*])
+         :where
+         [?e :group/id]]
+       @conn))
+
+(defn find-user []
+  (d/q '[:find (pull ?e [*])
+         :where
+         [?e :user/id]]
+       @conn))
+
+(d/q '[:find ?e
+       :where
+       [?e :group/id]
+       [?e :group/name "Groupe 1"]]
+     @conn)
+
+(find-group)
+(find-user)
 
 (d/q '[:find (pull ?e [:keyword/name
                        :keyword/keyword

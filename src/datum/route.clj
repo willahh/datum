@@ -11,9 +11,14 @@
   (GET "/"
        []
        "/page/list")
-  (GET "/page/list"
+  (GET "/user/list"
        [request]
-       (user-html/html request)))
+       (user-html/html-list request))
+  (GET "/user/form/1"
+       [request]
+       (user-html/html-form request))
+  
+  )
 
 (defonce app
   (-> 
