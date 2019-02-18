@@ -10,6 +10,7 @@
   (d/transact conn (edn/read-string (slurp "resources/data/group.edn")))
   (d/transact conn (edn/read-string (slurp "resources/data/company.edn")))
   (d/transact conn (edn/read-string (slurp "resources/data/profile.edn")))
+  (d/transact conn (edn/read-string (slurp "resources/data/media.edn")))
   (d/transact conn [{:group/id 2 :group/name "Groupe 2 update"}
                     {:user/id 1 :user/group 2}
                     {:user/id 2 :user/group 2}])
@@ -20,12 +21,14 @@
   (insert-data))
 
 (comment
-
-  ;; (d/pull @conn '[*] [:user/id 1])
   (d/pull-many @conn '[*]
                (d/q '[:find [?group ...]
                       :where
                       [?group :group/id]] @conn))
+  (d/pull-many @conn '[*]
+               (d/q '[:find [?media ...]
+                      :where
+                      [?media :media/id]] @conn))
 
   (d/pull-many @conn '[*]
                (d/q '[:find [?user ...]

@@ -1,9 +1,15 @@
-[{:user/id 1
-  :user/first-name "William"
-  :user/last-name "Ravel"}
- {:user/id 2
-  :user/first-name "User 2"
-  :user/last-name "User 2 last name"}
- {:user/id 3
-  :user/first-name "User 3"
-  :user/last-name "User last name"}]
+[{:media/id 1
+  :media/description "Media 1 descr"
+  :media/filename "file_name.jpg"
+  :media/size 100
+  :media/title "Media 1 title"}
+ {:media/id          2
+  :media/filename    "file_name2.jpg"
+  :media/description "Media 2 descr"
+  :media/size        102
+  :media/title       "Media 2 title"}
+ {:media/id          3
+  :media/filename    "file_name3.jpg"
+  :media/description "Media 3 descr"
+  :media/size        103
+  :media/title       "Media 3 title"}]

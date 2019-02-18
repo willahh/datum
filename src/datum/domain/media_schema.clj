@@ -1,15 +1,21 @@
-(ns datum.domain.user-schema)
+(ns datum.domain.media-schema)
 
 (def schema
   {
-   :user/id {:db/valueType :db.type/ref
+   :media/id {:db/valueType :db.type/ref
              :db/cardinality :db.cardinality/one
              :db/unique :db.unique/identity}
-   :user/first-name {:db/cardinality :db.cardinality/one
-                     :db/index true}
-   :user/last-name {:db/cardinality :db.cardinality/one
+   :media/filename {:db/valueType :db.type/string
+                    :db/cardinality :db.cardinality/one
                     :db/index true}
-   :user/company {:db/valueType :db.type/ref
-                  :db/cardinality :db.cardinality/one }
-   :user/group {:db/valueType :db.type/ref
-                :db/cardinality :db.cardinality/many }})
+   :media/size {:db/valueType :db.type/bigint
+                :db/cardinality :db.cardinality/one}
+   :media/title {:db/valueType :db.type/string
+                 :db/cardinality :db.cardinality/one
+                 :db/index true}
+   :media/description {:db/valueType :db.type/string
+                 :db/cardinality :db.cardinality/one
+                 :db/index true}
+   :media/category {:db/valueType :db.type/ref
+                    :db/cardinality :db.cardinality/many}
+   })
