@@ -19,7 +19,6 @@
          [:th (:user/first-name record)]
          [:th (:user/last-name record)]
          [:th (:user/company record)]
-         ;; [:th (:user/group record)]
          ]))]])
 
 (defn html-show [request]
@@ -35,6 +34,8 @@
     [:tr
      [:td "name"]
      [:td "Nom"]]]])
+
+
 
 (defn html-form [request]
   [:table.ui.celled.table

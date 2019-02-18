@@ -26,7 +26,7 @@
 (comment
   @conn
   (find-user-list)
-  (find-by :user/first-name "William update")
+  (find-by :user/first-name "William update 2")
   (insert 4 "User 4 fn" "User 4 ln")
   )
 

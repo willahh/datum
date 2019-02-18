@@ -15,123 +15,160 @@
                     {:user/id 2 :user/group 2}])
   (d/transact conn [{:user/id 1 :user/first-name "William update"}])
   (d/transact conn [{:user/id 1 :company/name "Apple"}]))
-;; (insert-data)
 
-;; (d/pull @conn '[*] [:user/id 1])
-(d/pull-many @conn '[*]
-             (d/q '[:find [?group ...]
-                    :where
-                    [?group :group/id]] @conn))
+(comment
+  (insert-data))
 
-(d/pull-many @conn '[*]
-             (d/q '[:find [?user ...]
-                    :where
-                    [?user :user/id]] @conn))
+(comment
 
-(d/pull-many @conn '[*]
-             (d/q '[:find [?user ...]
-                    :where
-                    [?user :user/id]
-                    ] @conn))
-
-(d/pull-many @conn '[*]
-             (d/q '[:find [?group ...]
-                    :where
-                    [?group :group/name "Groupe 2"]
-                    [?group :group/id ?groupid]
-                    [?user :user/group ?groupid]] @conn))
-
-(d/q '[:find ?group ?firstname
-       :where
-       [?group :group/name "Groupe 2"]
-       [?group :group/id ?groupid]
-       [?user :user/group ?groupid]
-       [?user :user/first-name ?firstname]]
-     @conn)
-
-
-
-(let [group-name "Groupe 2"]
+  ;; (d/pull @conn '[*] [:user/id 1])
   (d/pull-many @conn '[*]
-               (d/q '[:find ?group ?user
+               (d/q '[:find [?group ...]
+                      :where
+                      [?group :group/id]] @conn))
+
+  (d/pull-many @conn '[*]
+               (d/q '[:find [?user ...]
+                      :where
+                      [?user :user/id]] @conn))
+
+  (d/pull-many @conn '[*]
+               (d/q '[:find [?user ...]
+                      :where
+                      [?user :user/id]
+                      ] @conn))
+
+  (d/pull-many @conn '[*]
+               (d/q '[:find [?group ...]
                       :where
                       [?group :group/name "Groupe 2"]
                       [?group :group/id ?groupid]
-                      [?user :user/group ?groupid]
-                      [?user :user/first-name ?firstname]]
-                    @conn)
+                      [?user :user/group ?groupid]] @conn))
+
+  (d/q '[:find ?group ?firstname
+         :where
+         [?group :group/name "Groupe 2"]
+         [?group :group/id ?groupid]
+         [?user :user/group ?groupid]
+         [?user :user/first-name ?firstname]]
+       @conn)
+
+
+
+  ;; (let [group-name "Groupe 2"]
+  ;;   (d/pull-many @conn '[*]
+  ;;                (d/q '[:find ?group ?user
+  ;;                       :where
+  ;;                       [?group :group/name "Groupe 2"]
+  ;;                       [?group :group/id ?groupid]
+  ;;                       [?user :user/group ?groupid]
+  ;;                       [?user :user/first-name ?firstname]]
+  ;;                     @conn)
+  ;;                ))
+
+  ;; Find group by Group name
+  (d/q '[:find ?group ?firstname
+         :in $ ?group-name
+         :where
+         [?group :group/name ?group-name]
+         [?group :group/id ?groupid]
+         [?user :user/group ?groupid]
+         [?user :user/first-name ?firstname]
+         ]
+       @conn "Groupe 2")
+
+  ;; Find all entities
+  (d/q '[:find ?e ?name ?value
+        :where
+        [?e ?name ?value]]
+       @conn)
+
+  ;; Find all group
+  (d/q '[:find (pull ?group [*])
+         :where
+         [?group :group/id]]
+       @conn)
+
+  ;; Find all user
+  (d/q '[:find (pull ?user [*])
+         :where
+         [?user :user/id ?userid]]
+       @conn)
+
+  ;; TODO Find all user with nested relations
+  (d/q '[:find (pull ?user [:user/first-name
+                            {:user/group [:db/id :group/name]}])
+         :where
+         [?user :user/id ?userid]]
+       @conn)
+
+  (d/q '[:find (pull ?user [:user/first-name
+                            {:user/group [:db/id :group/name]}])
+         :where
+         [?user :user/id ?userid]]
+       @conn)
+
+  (d/q '[:find (pull ?group [:group/name])
+         :where
+         [?group :group/id ?groupid]
+         ]
+       @conn)
+
+  (d/q '[:find (pull ?group [*])
+         :where
+         [?group :group/id]]
+       @conn)
+
+  (d/q '[:find [pull ?group [:group/name]]
+         :where
+         [?group :group/id]
+         [?user :user/id]
+         ]
+       @conn)
+
+  (d/q '[:find (pull ?user [:user/first-name
+                            {:user/group [:db/id :group/name]}])
+         :where
+         [?user :user/id]]
+       @conn)
+
+  (d/q '[:find (pull ?user [:user/first-name
+                            {:user/group [:db/id :group/name]}])
+         :where
+         [?user :user/id]
+         [?group :group/id]
+         ]
+       @conn)
+
+  ;; (d/q '[:find ?user-first-name
+  ;;        :where
+  ;;        [?group :group/id]
+  ;;        [?user :user/id]
+  ;;        [?user :user/first-name ?user-first-name]
+  ;;        ]
+  ;;      @conn)
+
+  ;; (d/pull-many @conn '[:group/name]
+  ;;              [4 5])
+
+  ;; (d/pull-many @conn '[:group/name]
+  ;;              #{[5 2] [5 1]})
+
+  (d/pull-many @conn '[:group/name]
+               #{[5 2] [5 1]})
+
+  (d/pull-many @conn '[[:group/name :user/first-name]]
+               #{[5 2] [5 1]})
+
+  (d/pull-many @conn '[{:group [:group/name]}]
+               [4 5]
                ))
-
-(d/q '[:find ?group ?user
-       :where
-       [?group :group/name "Groupe 2"]
-       [?group :group/id ?groupid]
-       [?user :user/group ?groupid]
-       [?user :user/first-name ?firstname]
-       ]
-     @conn)
-
-(d/q '[:find (pull ?group [:group/name])
-       :where
-       [?group :group/id ?groupid] 
-       ]
-     @conn)
-
-(d/q '[:find (pull ?group [*])
-       :where
-       [?group :group/id]]
-     @conn)
-
-(d/q '[:find [pull ?group [:group/name]]
-       :where
-       [?group :group/id]
-       [?user :user/id]
-       ]
-     @conn)
-
-(d/q '[:find (pull ?user [:user/first-name
-                          {:user/group [:db/id :group/name]}])
-       :where
-       [?user :user/id]]
-     @conn)
-
-(d/q '[:find (pull ?user [:user/first-name
-                          {:user/group [:db/id :group/name]}])
-       :where
-       [?user :user/id]
-       [?group :group/id]
-       ]
-     @conn)
-
-(d/q '[:find ?user-first-name
-       :where
-       [?group :group/id]
-       [?user :user/id]
-       [?user :user/first-name ?user-first-name]
-       ]
-     @conn)
-
-(d/pull-many @conn '[:group/name]
-             [4 5])
-
-;; (d/pull-many @conn '[:group/name]
-;;              #{[5 2] [5 1]})
-
-(d/pull-many @conn '[:group/name]
-             #{[5 2] [5 1]})
-
-(d/pull-many @conn '[[:group/name :user/first-name]]
-             #{[5 2] [5 1]})
-
-(d/pull-many @conn '[{:group [:group/name]}]
-             [4 5]
-             )
 
 ;; (d/pull-many @conn '[[:group/name]]
 ;;              [[4] [5]]
 ;;              )
 
-(d/pull-many @conn '[{[:group/name :as "Name"]
-                      [[:group/id :as "Id"]]}]
-             [4 5]
-             )
+;; (d/pull-many @conn '[{[:group/name :as "Name"]
+;;                       [[:group/id :as "Id"]]}]
+;;              [4 5]
+;;              )
